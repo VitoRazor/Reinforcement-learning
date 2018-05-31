@@ -75,25 +75,23 @@ def update_env(S, episode, step_counter):
 
 
 def rl():
-    # main part of RL loop
     q_table = build_q_table(N_STATES, ACTIONS)
-    for episode in range(MAX_EPISODES):
+    for episode in range(MAX_EPISODES): #在规定迭代次数中
         step_counter = 0
         S = 0
         is_terminated = False
-        update_env(S, episode, step_counter)
+        update_env(S, episode, step_counter)  
         while not is_terminated:
-
-            A = choose_action(S, q_table)
-            S_, R = get_env_feedback(S, A)  # take action & get next state and reward
-            q_predict = q_table.loc[S, A]
+            A = choose_action(S, q_table)   #在q_talbe中选取分数最高的走（一定概率）
+            S_, R = get_env_feedback(S, A)  #在环境中做出决定后可以获得的分数反馈
+            q_predict = q_table.loc[S, A]   #当前表中的数值
             if S_ != 'terminal':
-                q_target = R + GAMMA * q_table.iloc[S_, :].max()   # next state is not terminal
+                q_target = R + GAMMA * q_table.iloc[S_, :].max()   # 从下一步可以预见的分数中，更新现有的表
             else:
-                q_target = R     # next state is terminal
+                q_target = R     #获得胜利，奖励分数
                 is_terminated = True    # terminate this episode
 
-            q_table.loc[S, A] += ALPHA * (q_target - q_predict)  # update
+            q_table.loc[S, A] += ALPHA * (q_target - q_predict)  # 更新当前表
             S = S_  # move to next state
 
             update_env(S, episode, step_counter+1)
