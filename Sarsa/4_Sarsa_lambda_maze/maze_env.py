@@ -6,7 +6,8 @@ Black rectangles:       hells       [reward = -1].
 Yellow bin circle:      paradise    [reward = +1].
 All other states:       ground      [reward = 0].
 
-This script is the environment part of this example. The RL is in RL_brain.py.
+This script is the environment part of this example.
+The RL is in RL_brain.py.
 
 View more on my tutorial page: https://morvanzhou.github.io/tutorials/
 """
@@ -29,10 +30,10 @@ MAZE_W = 4  # grid width
 class Maze(tk.Tk, object):
     def __init__(self):
         super(Maze, self).__init__()
-        self.action_space = ['u', 'd', 'l', 'r']  #设置action的参数 
-        self.n_actions = len(self.action_space)  #统计总共有几个action
+        self.action_space = ['u', 'd', 'l', 'r']
+        self.n_actions = len(self.action_space)
         self.title('maze')
-        self.geometry('{0}x{1}'.format(MAZE_H * UNIT, MAZE_H * UNIT))  #
+        self.geometry('{0}x{1}'.format(MAZE_H * UNIT, MAZE_H * UNIT))
         self._build_maze()
 
     def _build_maze(self):
@@ -40,7 +41,7 @@ class Maze(tk.Tk, object):
                            height=MAZE_H * UNIT,
                            width=MAZE_W * UNIT)
 
-        # create grids 画出清晰的线
+        # create grids
         for c in range(0, MAZE_W * UNIT, UNIT):
             x0, y0, x1, y1 = c, 0, c, MAZE_H * UNIT
             self.canvas.create_line(x0, y0, x1, y1)
@@ -48,23 +49,23 @@ class Maze(tk.Tk, object):
             x0, y0, x1, y1 = 0, r, MAZE_H * UNIT, r
             self.canvas.create_line(x0, y0, x1, y1)
 
-        # create origin   确定初始值
+        # create origin
         origin = np.array([20, 20])
 
-        # hell            确定黑洞坐标 ，并且设置黑洞轮廓
+        # hell
         hell1_center = origin + np.array([UNIT * 2, UNIT])
         self.hell1 = self.canvas.create_rectangle(
             hell1_center[0] - 15, hell1_center[1] - 15,
             hell1_center[0] + 15, hell1_center[1] + 15,
             fill='black')
-        # hell            
+        # hell
         hell2_center = origin + np.array([UNIT, UNIT * 2])
         self.hell2 = self.canvas.create_rectangle(
             hell2_center[0] - 15, hell2_center[1] - 15,
             hell2_center[0] + 15, hell2_center[1] + 15,
             fill='black')
 
-        # create oval       确定目标坐标，并且设置目标轮廓
+        # create oval
         oval_center = origin + UNIT * 2
         self.oval = self.canvas.create_oval(
             oval_center[0] - 15, oval_center[1] - 15,
@@ -128,21 +129,7 @@ class Maze(tk.Tk, object):
         return s_, reward, done
 
     def render(self):
-        time.sleep(0.1)
+        time.sleep(0.05)
         self.update()
 
 
-def update():
-    for t in range(10):
-        s = env.reset()
-        while True:
-            env.render()
-            a = 1
-            s, r, done = env.step(a)
-            if done:
-                break
-
-if __name__ == '__main__':
-    env = Maze()
-    env.after(100, update)
-    env.mainloop()
